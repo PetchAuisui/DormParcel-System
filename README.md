@@ -171,4 +171,5 @@ flowchart TB
 
 ---
 
-## 🧾 ส่วน ER Diagram `
+## 🧾 ส่วน ER Diagram 
+<img width="2334" height="1338" alt="Untitled (2)" src="https://github.com/user-attachments/assets/d72a8b0f-c593-433e-a050-404f481520f3" />
