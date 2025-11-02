@@ -19,6 +19,7 @@ services:
   db:
     image: postgres:16
     container_name: dormparcel-db
+    restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -27,12 +28,12 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./dorm_parcel_schema.sql:/docker-entrypoint-initdb.d/dorm_parcel_schema.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 3s
       retries: 10
-    restart: unless-stopped
 
 volumes:
   pgdata:
