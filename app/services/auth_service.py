@@ -14,6 +14,9 @@ class AuthService:
         if User.query.filter_by(national_id=national_id).first():
             flash('หมายเลขบัตรประชาชนนี้ถูกใช้งานแล้ว', 'warning')
             return redirect(url_for('auth.register'))
+        if User.query.filter_by(phone=phone).first() and phone is not None:
+            flash('หมายเลขโทรศัพท์นี้ถูกใช้งานแล้ว', 'warning')
+            return redirect(url_for('auth.register'))
         new_user = User(
             full_name=full_name,
             email=email,
@@ -32,10 +35,13 @@ class AuthService:
         return redirect(url_for('auth.register'))
     
 
-    def login(self, email, password):
-        user = User.query.filter_by(email=email).first()
+    def login(self, identifier, password):
+        if '@' in identifier:
+            user = User.query.filter_by(email=identifier).first()
+        else:
+            user = User.query.filter_by(phone=identifier).first()
         if not user or not user.check_password(password):
-            flash('อีเมลหรือรหัสผ่านไม่ถูกต้อง', 'danger')
+            flash('อีเมล/เบอร์โทรศัพท์ หรือ รหัสผ่านไม่ถูกต้อง', 'danger')
             return redirect(url_for('auth.login'))
         
         SessionManager.login_user(user)

@@ -25,10 +25,10 @@ def register():
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('email')
+        identifier = request.form.get('identifier')
         password = request.form.get('password')
 
-        return auth_service.login(email, password)
+        return auth_service.login(identifier, password)
     return render_template('login.html')
 
 @auth_bp.route('/logout')
