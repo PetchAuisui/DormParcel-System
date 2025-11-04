@@ -5,6 +5,9 @@ from app.utils.session_manager import SessionManager
 
 class AuthService:
     def register(self, full_name, email, password, role, national_id, dorm_id=None, room_id=None, phone=None):
+        if not national_id.isdecimal() or len(national_id) != 13:
+            flash('หมายเลขบัตรประชาชนไม่ถูกต้อง กรุณาลองอีกครั้ง', 'warning')
+            return redirect(url_for('auth.register'))
         if User.query.filter_by(email=email).first():
             flash('อีเมลนี้ถูกใช้งานแล้ว', 'warning')
             return redirect(url_for('auth.register'))
@@ -26,7 +29,7 @@ class AuthService:
         db.session.commit()
 
         flash('ลงทะเบียนสำเร็จ! กรุณาเข้าสู่ระบบ', 'success')
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('auth.register'))
     
 
     def login(self, email, password):

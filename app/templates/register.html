@@ -193,34 +193,45 @@
       roomField.style.display = (role === 'RESIDENT') ? 'block' : 'none';
     }
 
-    function validatePasswords() {
-      const pw1 = document.getElementById('password').value;
-      const pw2 = document.getElementById('confirm_password').value;
+function validatePasswords() {
+  const pw1 = document.getElementById('password').value;
+  const pw2 = document.getElementById('confirm_password').value;
 
-      if (pw1 !== pw2) {
-        alert("รหัสผ่านทั้งสองช่องไม่ตรงกัน กรุณาลองอีกครั้ง");
-        return false;
-      }
-      return true;
-    }
+  if (pw1 !== pw2) {
+    Swal.fire({
+      icon: 'error',
+      title: 'รหัสผ่านไม่ตรงกัน',
+      text: 'กรุณากรอกให้ตรงกันทั้งสองช่อง',
+      confirmButtonColor: '#00CC66',
+      confirmButtonText: 'ตกลง'
+    });
+    return false;  // ❗️หยุดไม่ให้ฟอร์ม submit
+  }
+  return true;
+}
+
 
     // เริ่มต้น: แสดงเฉพาะถ้า role = Resident
     toggleRoomField();
   </script>
-    <!-- ใส่ไว้ก่อนปิด </body> -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         <script>
         document.addEventListener('DOMContentLoaded', function() {
-            {% for category, message in messages %}
-            Swal.fire({
-                icon: "{{ 'success' if category == 'success' else 'error' }}",
-                title: "{{ message }}",
-                confirmButtonColor: '#00CC66'
-            });
-            {% endfor %}
+        {% for category, message in messages %}
+        Swal.fire({
+            icon: "{{ 'success' if category == 'success' else 'error' }}",
+            title: "{{ message }}",
+            confirmButtonText: "{{ 'ไปหน้าเข้าสู่ระบบ' if category == 'success' else 'ตกลง' }}",
+            confirmButtonColor: '#00CC66'
+        }).then((result) => {
+            if (result.isConfirmed && "{{ category }}" === "success") {
+            window.location.href = "{{ url_for('auth.login') }}";  // ✅ ไปหน้า login
+            }
+        });
+        {% endfor %}
         });
         </script>
     {% endif %}
