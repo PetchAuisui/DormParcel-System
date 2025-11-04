@@ -1,0 +1,61 @@
+# 🧱 Python / Flask
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+instance/
+*.log
+
+# ⚙️ Environment & Config
+.env
+*.env
+*.bak
+*.swp
+
+# 🐳 Docker
+*.pid
+*.seed
+*.bak
+*.tmp
+*.log
+*~ 
+*.tar
+*.gz
+*.zip
+*.tgz
+*.bak
+*.swp
+*.sock
+
+# Docker metadata
+.docker/
+docker-compose.override.yml
+.envrc
+
+# 🧰 IDE / Editor (VS Code)
+.vscode/
+.idea/
+*.code-workspace
+
+# 🗃️ Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 🔧 System Files (Windows/Mac)
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 🧪 Virtual Environments
+venv/
+env/
+ENV/
+.venv/
+.Python 
+
+# 🧾 Migrations (optional)
+migrations/
+*.bak
