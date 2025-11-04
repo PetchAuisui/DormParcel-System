@@ -160,11 +160,17 @@
   <form method="POST" onsubmit="return validatePasswords()">
     <h2>สมัครสมาชิก</h2>
 
+    <label>รหัสบัตรประชาชน:</label>
+    <input name="national_id" maxlength="13" placeholder="เลขบัตรประชาชน 13 หลัก" required>
+
     <label>ชื่อ-นามสกุล:</label>
     <input name="full_name" placeholder="ชื่อ-นามสกุล" required>
 
     <label>อีเมล:</label>
     <input name="email" type="email" placeholder="อีเมล" required>
+
+    <label>เบอร์โทรศัพท์:</label>
+    <input name="phone" placeholder="เบอร์โทร" required>
 
     <label>รหัสผ่าน:</label>
     <input id="password" name="password" type="password" placeholder="รหัสผ่าน" required>
@@ -201,6 +207,24 @@
     // เริ่มต้น: แสดงเฉพาะถ้า role = Resident
     toggleRoomField();
   </script>
+    <!-- ใส่ไว้ก่อนปิด </body> -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            {% for category, message in messages %}
+            Swal.fire({
+                icon: "{{ 'success' if category == 'success' else 'error' }}",
+                title: "{{ message }}",
+                confirmButtonColor: '#00CC66'
+            });
+            {% endfor %}
+        });
+        </script>
+    {% endif %}
+    {% endwith %}
 
 </body>
 </html>

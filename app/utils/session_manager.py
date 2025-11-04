@@ -2,13 +2,15 @@ from flask import session
 
 class SessionManager:
     @staticmethod
-    def login(user):
+    def login_user(user):
         session['user_id'] = user.user_id
         session['user_name'] = user.full_name
         session['role'] = user.role
+        session['dorm_id'] = user.dorm_id
+        session['room_id'] = user.room_id
 
     @staticmethod
-    def logout():
+    def logout_user():
         session.clear()
 
     @staticmethod
@@ -17,6 +19,8 @@ class SessionManager:
             return {
                 "id": session["user_id"],
                 "name": session["user_name"],
-                "role": session["role"]
+                "role": session["role"],
+                "dorm_id": session.get("dorm_id"),
+                "room_id": session.get("room_id")
             }
         return None

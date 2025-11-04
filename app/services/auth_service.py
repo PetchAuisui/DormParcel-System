@@ -4,18 +4,20 @@ from app.extensions import db
 from app.utils.session_manager import SessionManager
 
 class AuthService:
-    def register(self, full_name, email, password, role, room_number=None):
+    def register(self, full_name, email, password, role, national_id, dorm_id=None, room_id=None, phone=None):
         if User.query.filter_by(email=email).first():
             flash('อีเมลนี้ถูกใช้งานแล้ว', 'warning')
             return redirect(url_for('auth.register'))
-
-        if role == "RESIDENT" and not room_number:
-            flash('กรุณาระบุหมายเลขห้องสำหรับผู้พักอาศัย', 'warning')
+        if User.query.filter_by(national_id=national_id).first():
+            flash('หมายเลขบัตรประชาชนนี้ถูกใช้งานแล้ว', 'warning')
             return redirect(url_for('auth.register'))
-        
         new_user = User(
             full_name=full_name,
             email=email,
+            national_id=national_id,
+            phone=phone,
+            dorm_id=dorm_id,
+            room_id=room_id,
             role=role
         )
 
