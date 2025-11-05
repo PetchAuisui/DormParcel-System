@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm p-4">
+    <h2 class="text-center text-primary mb-4">➕ เพิ่มหอพักใหม่</h2>
+
+    <form method="POST">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="name" class="form-label">ชื่อหอพัก *</label>
+          <input type="text" class="form-control" id="name" name="name" required placeholder="เช่น หอพักพีชคุง A">
+        </div>
+        <div class="col-md-6">
+          <label for="building_code" class="form-label">รหัสอาคาร *</label>
+          <input type="text" class="form-control" id="building_code" name="building_code" required placeholder="เช่น D01">
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="total_floors" class="form-label">จำนวนชั้น *</label>
+          <input type="number" min="1" class="form-control" id="total_floors" name="total_floors" required value="1">
+        </div>
+        <div class="col-md-6">
+          <label for="total_rooms" class="form-label">จำนวนห้องทั้งหมด *</label>
+          <input type="number" min="0" class="form-control" id="total_rooms" name="total_rooms" required value="0">
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="address" class="form-label">ที่อยู่</label>
+        <textarea class="form-control" id="address" name="address" rows="3" placeholder="ระบุที่อยู่หอพัก"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="phone" class="form-label">เบอร์โทรศัพท์</label>
+        <input type="text" class="form-control" id="phone" name="phone" placeholder="เช่น 0812345678">
+      </div>
+
+      <div class="text-end">
+        <button type="submit" class="btn btn-success">💾 บันทึก</button>
+        <a href="{{ url_for('admin.dorm_list') }}" class="btn btn-secondary">ยกเลิก</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

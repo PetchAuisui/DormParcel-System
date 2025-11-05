@@ -21,7 +21,7 @@ class RoomForm(FlaskForm):
     )
     submit = SubmitField("บันทึก")
 
--
+
 @bp.before_request
 def require_admin_role():
     if session.get("role") != "ADMIN":
@@ -29,38 +29,78 @@ def require_admin_role():
         return redirect(url_for("auth.login"))
 
 
-@bp.route("/")
-def room_list():
-    dorm_id = request.args.get("dorm_id", type=int)
-    if not dorm_id:
-        flash("กรุณาเลือกหอพักก่อน", "warning")
-        return redirect(url_for("admin.dorm_list"))
 
+bp = Blueprint("admin", __name__, url_prefix="/admin/dorms")
+
+
+@bp.route("/")
+def dorm_list():
+    dorms = Dormitory.query.all()
+    if not dorms:
+        flash("ยังไม่มีข้อมูลหอพัก", "warning")
+    return render_template("admin_dorm_list.html", dorms=dorms)
+
+
+@bp.route("/<int:dorm_id>/rooms")
+def dorm_rooms(dorm_id):
     dorm = Dormitory.query.get_or_404(dorm_id)
     rooms = Room.query.filter_by(dorm_id=dorm_id).order_by(Room.floor, Room.room_number).all()
     return render_template("admin_room_list.html", dorm=dorm, rooms=rooms)
 
 
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from app.extensions import db
+from app.models.dormitory_model import Dormitory
+
+bp = Blueprint("admin", __name__, url_prefix="/admin/dorms")
+
+
+# 🏢 แสดงรายการหอพักทั้งหมด
+@bp.route("/")
+def dorm_list():
+    dorms = Dormitory.query.order_by(Dormitory.dorm_id.asc()).all()
+    if not dorms:
+        flash("ยังไม่มีข้อมูลหอพัก", "warning")
+    return render_template("admin_dorm_list.html", dorms=dorms)
+
+
+# ➕ เพิ่มหอพักใหม่
 @bp.route("/add", methods=["GET", "POST"])
-def room_add():
-    dorm_id = request.args.get("dorm_id", type=int)
-    dorm = Dormitory.query.get_or_404(dorm_id)
-    form = RoomForm()
+def add_dorm():
+    if request.method == "POST":
+        name = request.form.get("name")
+        building_code = request.form.get("building_code")
+        address = request.form.get("address")
+        phone = request.form.get("phone")
+        total_floors = request.form.get("total_floors", type=int)
+        total_rooms = request.form.get("total_rooms", type=int)
 
-    if form.validate_on_submit():
-        new_room = Room(
-            dorm_id=dorm.dorm_id,
-            room_number=form.room_number.data,
-            floor=form.floor.data,
-            type=form.type.data,
-            status=form.status.data,
+        # ✅ ตรวจสอบข้อมูลที่จำเป็น
+        if not name or not building_code:
+            flash("กรุณากรอกชื่อหอพักและรหัสอาคาร", "error")
+            return redirect(url_for("admin.add_dorm"))
+
+        # ✅ ตรวจรหัสอาคารซ้ำ
+        existing = Dormitory.query.filter_by(building_code=building_code).first()
+        if existing:
+            flash("รหัสอาคารนี้มีอยู่แล้ว ❌", "error")
+            return redirect(url_for("admin.add_dorm"))
+
+        new_dorm = Dormitory(
+            name=name,
+            building_code=building_code,
+            address=address,
+            phone=phone,
+            total_floors=total_floors or 1,
+            total_rooms=total_rooms or 0
         )
-        db.session.add(new_room)
-        db.session.commit()
-        flash(f"เพิ่มห้อง {new_room.room_number} ใน {dorm.name} เรียบร้อย ✅", "success")
-        return redirect(url_for("admin_room.room_list", dorm_id=dorm_id))
 
-    return render_template("admin_room_add.html", form=form, dorm=dorm)
+        db.session.add(new_dorm)
+        db.session.commit()
+        flash(f"เพิ่มหอพัก {name} เรียบร้อย ✅", "success")
+        return redirect(url_for("admin.dorm_list"))
+
+    return render_template("admin_dorm_add.html")
 
 
 @bp.route("/<int:room_id>/edit", methods=["GET", "POST"])
