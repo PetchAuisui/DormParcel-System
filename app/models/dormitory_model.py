@@ -9,6 +9,8 @@ class Dormitory(db.Model):
     address = db.Column(db.Text)
     building_code = db.Column(db.String(50), unique=True, nullable=False)
     phone = db.Column(db.String(20))
+    total_floors = db.Column(db.Integer, default=1)
+    total_rooms = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     rooms = db.relationship("Room", back_populates="dormitory", cascade="all, delete-orphan")

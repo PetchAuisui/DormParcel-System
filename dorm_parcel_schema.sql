@@ -12,6 +12,8 @@ CREATE TABLE dormitories (
     address TEXT,
     building_code VARCHAR(50) UNIQUE NOT NULL,
     phone VARCHAR(20),
+    total_floors INT DEFAULT 1,
+    total_rooms INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT NOW()
 );
 
