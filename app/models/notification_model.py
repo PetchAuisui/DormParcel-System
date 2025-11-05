@@ -14,4 +14,5 @@ class Notification(db.Model):
     read_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
+    user = db.relationship("User", back_populates="notifications")
     parcel = db.relationship("Parcel", back_populates="notifications")

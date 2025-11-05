@@ -10,4 +10,4 @@ class Carrier(db.Model):
     phone = db.Column(db.String(20))
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
-    parcels = db.relationship("Parcel", back_populates="carrier")
+    parcels = db.relationship("Parcel", back_populates="carrier", lazy=True)

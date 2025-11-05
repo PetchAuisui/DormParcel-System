@@ -32,14 +32,8 @@
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     h2 {
@@ -75,24 +69,13 @@
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
 
-    input::placeholder {
-      color: #aaa;
-    }
-
-    select {
-      cursor: pointer;
-      background-color: white;
-    }
-
-    #roomField {
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
+    input::placeholder { color: #aaa; }
+    select { cursor: pointer; background-color: white; }
 
     button {
       width: 100%;
       padding: 14px;
-      background: #00CC66;	;
+      background: #00CC66;
       color: white;
       border: none;
       border-radius: 8px;
@@ -108,50 +91,12 @@
       box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
     }
 
-    button:active {
-      transform: translateY(0);
-    }
-
-    /* Responsive สำหรับมือถือ */
+    /* Responsive */
     @media (max-width: 640px) {
-      form {
-        padding: 30px 24px;
-      }
-
-      h2 {
-        font-size: 24px;
-        margin-bottom: 24px;
-      }
-
-      label {
-        font-size: 14px;
-        margin-top: 14px;
-      }
-
-      input, select {
-        padding: 11px 14px;
-        font-size: 14px;
-      }
-
-      button {
-        padding: 13px;
-        font-size: 15px;
-        margin-top: 20px;
-      }
-    }
-
-    @media (max-width: 400px) {
-      body {
-        padding: 10px;
-      }
-
-      form {
-        padding: 24px 18px;
-      }
-
-      h2 {
-        font-size: 22px;
-      }
+      form { padding: 30px 24px; }
+      h2 { font-size: 24px; margin-bottom: 24px; }
+      input, select { font-size: 14px; }
+      button { font-size: 15px; margin-top: 20px; }
     }
   </style>
 </head>
@@ -160,11 +105,11 @@
   <form method="POST" onsubmit="return validatePasswords()">
     <h2>สมัครสมาชิก</h2>
 
-    <label>รหัสบัตรประชาชน:</label>
-    <input name="national_id" maxlength="13" placeholder="เลขบัตรประชาชน 13 หลัก" required>
-
     <label>ชื่อ-นามสกุล:</label>
     <input name="full_name" placeholder="ชื่อ-นามสกุล" required>
+
+    <label>รหัสบัตรประชาชน:</label>
+    <input name="national_id" maxlength="13" placeholder="เลขบัตรประชาชน 13 หลัก" required>
 
     <label>อีเมล:</label>
     <input name="email" type="email" placeholder="อีเมล" required>
@@ -172,70 +117,80 @@
     <label>เบอร์โทรศัพท์:</label>
     <input name="phone" placeholder="เบอร์โทร" required>
 
+    <label>เพศ:</label>
+    <select name="gender">
+      <option value="">-- เลือกเพศ --</option>
+      <option value="MALE">ชาย</option>
+      <option value="FEMALE">หญิง</option>
+      <option value="OTHER">อื่น ๆ</option>
+    </select>
+
+    <label>วันเดือนปีเกิด:</label>
+    <input name="date_of_birth" type="date" required>
+
+    <label>บทบาท:</label>
+    <select name="role" id="roleSelect" onchange="toggleRoomDormFields()">
+      <option value="RESIDENT">Resident (ผู้พักอาศัย)</option>
+      <option value="OFFICER">Officer (เจ้าหน้าที่)</option>
+      <option value="STAFF">Staff (พนักงานหอ)</option>
+      <option value="OWNER">Owner (เจ้าของหอ)</option>
+    </select>
+
     <label>รหัสผ่าน:</label>
     <input id="password" name="password" type="password" placeholder="รหัสผ่าน" required>
 
     <label>ยืนยันรหัสผ่าน:</label>
     <input id="confirm_password" name="confirm_password" type="password" placeholder="พิมพ์รหัสผ่านอีกครั้ง" required>
 
-    <label>บทบาท:</label>
-    <select name="role" id="roleSelect" onchange="toggleRoomField()">
-      <option value="RESIDENT">Resident (ผู้พักอาศัย)</option>
-      <option value="OFFICER">Officer (เจ้าหน้าที่)</option>
-    </select>
     <button type="submit">สมัครสมาชิก</button>
   </form>
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-    function toggleRoomField() {
+    function toggleRoomDormFields() {
       const role = document.getElementById('roleSelect').value;
-      const roomField = document.getElementById('roomField');
-      roomField.style.display = (role === 'RESIDENT') ? 'block' : 'none';
+      document.getElementById('dormFields').style.display = (role !== 'ADMIN') ? 'block' : 'none';
+      document.getElementById('roomFields').style.display = (role === 'RESIDENT') ? 'block' : 'none';
     }
 
-function validatePasswords() {
-  const pw1 = document.getElementById('password').value;
-  const pw2 = document.getElementById('confirm_password').value;
-
-  if (pw1 !== pw2) {
-    Swal.fire({
-      icon: 'error',
-      title: 'รหัสผ่านไม่ตรงกัน',
-      text: 'กรุณากรอกให้ตรงกันทั้งสองช่อง',
-      confirmButtonColor: '#00CC66',
-      confirmButtonText: 'ตกลง'
-    });
-    return false;  // ❗️หยุดไม่ให้ฟอร์ม submit
-  }
-  return true;
-}
-
-
-    // เริ่มต้น: แสดงเฉพาะถ้า role = Resident
-    toggleRoomField();
-  </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-        {% for category, message in messages %}
+    function validatePasswords() {
+      const pw1 = document.getElementById('password').value;
+      const pw2 = document.getElementById('confirm_password').value;
+      if (pw1 !== pw2) {
         Swal.fire({
-            icon: "{{ 'success' if category == 'success' else 'error' }}",
-            title: "{{ message }}",
-            confirmButtonText: "{{ 'ไปหน้าเข้าสู่ระบบ' if category == 'success' else 'ตกลง' }}",
-            confirmButtonColor: '#00CC66'
-        }).then((result) => {
-            if (result.isConfirmed && "{{ category }}" === "success") {
-            window.location.href = "{{ url_for('auth.login') }}";  // ✅ ไปหน้า login
-            }
+          icon: 'error',
+          title: 'รหัสผ่านไม่ตรงกัน',
+          text: 'กรุณากรอกให้ตรงกันทั้งสองช่อง',
+          confirmButtonColor: '#00CC66'
         });
-        {% endfor %}
-        });
-        </script>
-    {% endif %}
-    {% endwith %}
+        return false;
+      }
+      return true;
+    }
+
+    document.addEventListener('DOMContentLoaded', toggleRoomDormFields);
+  </script>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      {% for category, message in messages %}
+      Swal.fire({
+        icon: "{{ 'success' if category == 'success' else 'error' }}",
+        title: "{{ message }}",
+        confirmButtonText: "{{ 'ไปหน้าเข้าสู่ระบบ' if category == 'success' else 'ตกลง' }}",
+        confirmButtonColor: '#00CC66'
+      }).then((result) => {
+        if (result.isConfirmed && "{{ category }}" === "success") {
+          window.location.href = "{{ url_for('auth.login') }}";
+        }
+      });
+      {% endfor %}
+    });
+  </script>
+  {% endif %}
+  {% endwith %}
 
 </body>
 </html>

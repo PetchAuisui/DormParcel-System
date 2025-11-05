@@ -10,4 +10,4 @@ class UserDormRole(db.Model):
     assigned_at = db.Column(db.DateTime, server_default=db.func.now())
 
     user = db.relationship("User", back_populates="dorm_roles")
-    dorm = db.relationship("Dormitory", back_populates="user_roles")
+    dormitory = db.relationship("Dormitory", back_populates="user_roles")

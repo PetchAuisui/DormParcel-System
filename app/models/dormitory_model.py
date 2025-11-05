@@ -13,6 +13,7 @@ class Dormitory(db.Model):
     total_rooms = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
-    rooms = db.relationship("Room", back_populates="dormitory", cascade="all, delete-orphan")
-    user_roles = db.relationship("UserDormRole", back_populates="dorm", cascade="all, delete-orphan")
-    parcels = db.relationship("Parcel", back_populates="dorm", cascade="all, delete-orphan")
+    rooms = db.relationship("Room", back_populates="dormitory", lazy=True)
+    users = db.relationship("User", back_populates="dormitory", lazy=True)
+    user_roles = db.relationship("UserDormRole", back_populates="dormitory", lazy=True)
+    parcels = db.relationship("Parcel", back_populates="dormitory", lazy=True)

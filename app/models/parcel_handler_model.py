@@ -10,4 +10,4 @@ class ParcelHandler(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     parcel = db.relationship("Parcel", back_populates="handlers")
-    handler = db.relationship("User")
+    handler = db.relationship("User", back_populates="handled_parcels")
