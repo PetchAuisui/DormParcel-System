@@ -10,3 +10,7 @@ class Dormitory(db.Model):
     building_code = db.Column(db.String(50), unique=True, nullable=False)
     phone = db.Column(db.String(20))
     created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+    rooms = db.relationship("Room", back_populates="dormitory", cascade="all, delete-orphan")
+    user_roles = db.relationship("UserDormRole", back_populates="dorm", cascade="all, delete-orphan")
+    parcels = db.relationship("Parcel", back_populates="dorm", cascade="all, delete-orphan")
