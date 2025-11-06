@@ -11,7 +11,7 @@ def create_app():
 
     from app.controllers.main_controller import bp as main_bp
     from app.controllers.auth_controller import auth_bp
-    from app.controllers.admin_room_controller import bp as admin_room_bp
+    from app.controllers.admin_dorm_controller import bp as admin_room_bp
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_room_bp)
