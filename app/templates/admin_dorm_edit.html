@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <div class="card p-4 shadow-sm">
+    <h2 class="text-center text-primary mb-4">✏️ แก้ไขข้อมูลหอพัก</h2>
+
+    <form method="POST">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label">ชื่อหอพัก *</label>
+          <input type="text" class="form-control" name="name" required value="{{ dorm.name }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">เบอร์โทรศัพท์</label>
+          <input type="text" class="form-control" name="phone" value="{{ dorm.phone }}">
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label">จำนวนชั้น</label>
+          <input type="number" class="form-control" name="total_floors" min="1" value="{{ dorm.total_floors }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">จำนวนห้องทั้งหมด</label>
+          <input type="number" class="form-control" name="total_rooms" min="0" value="{{ dorm.total_rooms }}">
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">ที่อยู่</label>
+        <textarea class="form-control" name="address" rows="3">{{ dorm.address }}</textarea>
+      </div>
+
+      {% if dorm.google_map_link is defined %}
+      <div class="mb-3">
+        <label class="form-label">ลิงก์ Google Maps</label>
+        <input type="url" class="form-control" name="google_map_link" value="{{ dorm.google_map_link }}">
+      </div>
+      {% endif %}
+
+      <div class="text-end">
+        <button type="submit" class="btn btn-success">💾 บันทึก</button>
+        <a href="{{ url_for('admin_dorm.dorm_list') }}" class="btn btn-secondary">ยกเลิก</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

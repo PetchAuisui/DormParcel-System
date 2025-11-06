@@ -25,30 +25,19 @@ def dorm_list():
 def add_dorm():
     if request.method == "POST":
         name = request.form.get("name")
-        building_code = request.form.get("building_code")
         address = request.form.get("address")
         phone = request.form.get("phone")
         total_floors = request.form.get("total_floors", type=int)
         total_rooms = request.form.get("total_rooms", type=int)
-
-        # ✅ ตรวจสอบข้อมูลที่จำเป็น
-        if not name or not building_code:
-            flash("กรุณากรอกชื่อหอพักและรหัสอาคาร", "error")
-            return redirect(url_for("admin_dorm.add_dorm"))
-
-        # ✅ ตรวจรหัสอาคารซ้ำ
-        existing = Dormitory.query.filter_by(building_code=building_code).first()
-        if existing:
-            flash("รหัสอาคารนี้มีอยู่แล้ว ❌", "error")
-            return redirect(url_for("admin_dorm.add_dorm"))
+        google_map_link = request.form.get("google_map_link")
 
         new_dorm = Dormitory(
             name=name,
-            building_code=building_code,
             address=address,
             phone=phone,
             total_floors=total_floors or 1,
-            total_rooms=total_rooms or 0
+            total_rooms=total_rooms or 0,
+            google_map_link=google_map_link,
         )
 
         db.session.add(new_dorm)
@@ -57,3 +46,43 @@ def add_dorm():
         return redirect(url_for("admin_dorm.dorm_list"))
 
     return render_template("admin_dorm_add.html")
+
+@bp.route("/<int:dorm_id>/edit", methods=["GET", "POST"])
+def edit_dorm(dorm_id):
+    dorm = Dormitory.query.get_or_404(dorm_id)
+
+    if request.method == "POST":
+        dorm.name = request.form.get("name")
+        dorm.address = request.form.get("address")
+        dorm.phone = request.form.get("phone")
+        dorm.total_floors = request.form.get("total_floors", type=int)
+        dorm.total_rooms = request.form.get("total_rooms", type=int)
+        # ถ้ามี google_map_link ใน model แล้ว:
+        if hasattr(dorm, "google_map_link"):
+            dorm.google_map_link = request.form.get("google_map_link")
+
+        try:
+            db.session.commit()
+            flash(f"แก้ไขข้อมูลหอพัก {dorm.name} เรียบร้อย ✅", "success")
+        except Exception as e:
+            db.session.rollback()
+            flash(f"เกิดข้อผิดพลาดในการบันทึก: {str(e)}", "error")
+
+        return redirect(url_for("admin_dorm.dorm_list"))
+
+    return render_template("admin_dorm_edit.html", dorm=dorm)
+
+# 🗑️ ลบหอพัก
+@bp.route("/<int:dorm_id>/delete", methods=["POST"])
+def delete_dorm(dorm_id):
+    dorm = Dormitory.query.get_or_404(dorm_id)
+
+    try:
+        db.session.delete(dorm)
+        db.session.commit()
+        flash(f"ลบหอพัก {dorm.name} เรียบร้อยแล้ว 🗑️", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"เกิดข้อผิดพลาดในการลบหอพัก: {str(e)}", "error")
+
+    return redirect(url_for("admin_dorm.dorm_list"))

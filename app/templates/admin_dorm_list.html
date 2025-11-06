@@ -25,7 +25,7 @@
         <td>{{ dorm.name }}</td>
         <td>{{ dorm.building_code }}</td>
         <td class="text-center">
-          <a href="{{ url_for('admin_dorm.dorm_rooms', dorm_id=dorm.dorm_id) }}" class="btn btn-primary btn-sm">
+          <a href="{{ url_for('admin_dorm.dorm_list') }}" class="btn btn-primary btn-sm">
             ดูห้องพัก
           </a>
           <a href="{{ url_for('admin_dorm.edit_dorm', dorm_id=dorm.dorm_id) }}" class="btn btn-warning btn-sm">
