@@ -33,14 +33,8 @@
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     h2 {
@@ -48,10 +42,6 @@
       margin-bottom: 30px;
       font-size: 28px;
       font-weight: 600;
-    }
-
-    form {
-      margin-bottom: 20px;
     }
 
     input {
@@ -71,14 +61,6 @@
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
 
-    input::placeholder {
-      color: #aaa;
-    }
-
-    br {
-      display: none;
-    }
-
     button {
       width: 100%;
       padding: 14px;
@@ -95,31 +77,10 @@
 
     button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 6px 20px rgba(0, 204, 102, 0.3);
     }
 
-    button:active {
-      transform: translateY(0);
-    }
-
-    .register-link {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 12px 24px;
-      color: #667eea;
-      text-decoration: none;
-      font-weight: 500;
-      border: 2px solid #667eea;
-      border-radius: 8px;
-      transition: all 0.3s ease;
-    }
-
-    .register-link:hover {
-      background: #667eea;
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    }
+    button:active { transform: translateY(0); }
 
     .divider {
       display: flex;
@@ -128,65 +89,50 @@
       color: #999;
       font-size: 14px;
     }
-
-    .divider::before,
-    .divider::after {
+    .divider::before, .divider::after {
       content: '';
       flex: 1;
       height: 1px;
       background: #e0e0e0;
     }
+    .divider::before { margin-right: 12px; }
+    .divider::after { margin-left: 12px; }
 
-    .divider::before {
-      margin-right: 12px;
+    .register-link {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 12px 24px;
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+      border: 2px solid #667eea;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .register-link:hover {
+      background: #667eea;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
 
-    .divider::after {
-      margin-left: 12px;
-    }
-
-    /* Responsive สำหรับมือถือ */
+    /* Responsive */
     @media (max-width: 640px) {
-      .login-container {
-        padding: 30px 24px;
-      }
-
-      h2 {
-        font-size: 24px;
-        margin-bottom: 24px;
-      }
-
-      input {
-        padding: 11px 14px;
-        font-size: 14px;
-        margin-bottom: 14px;
-      }
-
-      button {
-        padding: 13px;
-        font-size: 15px;
-      }
-
-      .register-link {
-        padding: 10px 20px;
-        font-size: 14px;
-      }
+      .login-container { padding: 30px 24px; }
+      h2 { font-size: 24px; margin-bottom: 24px; }
+      input { padding: 11px 14px; font-size: 14px; margin-bottom: 14px; }
+      button { padding: 13px; font-size: 15px; }
+      .register-link { padding: 10px 20px; font-size: 14px; }
     }
 
     @media (max-width: 400px) {
-      body {
-        padding: 10px;
-      }
-
-      .login-container {
-        padding: 24px 18px;
-      }
-
-      h2 {
-        font-size: 22px;
-      }
+      body { padding: 10px; }
+      .login-container { padding: 24px 18px; }
+      h2 { font-size: 22px; }
     }
   </style>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -197,11 +143,24 @@
       <input type="password" name="password" placeholder="รหัสผ่าน" required>
       <button type="submit">เข้าสู่ระบบ</button>
     </form>
-    
+
     <div class="divider">หรือ</div>
-    
     <a href="{{ url_for('auth.register') }}" class="register-link">สมัครสมาชิก</a>
   </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+      Swal.fire({
+        icon: "{% if category in ['error', 'danger'] %}error{% elif category == 'warning' %}warning{% else %}success{% endif %}",
+        title: "{{ message }}",
+        confirmButtonColor: '#00CC66'
+      });
+    {% endfor %}
+  });
+</script>
+
 
 </body>
 </html>
